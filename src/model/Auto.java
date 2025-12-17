@@ -1,27 +1,35 @@
 package model;
 
-public class Auto extends Fahrzeug{
-    private String art;
+import java.time.LocalDate;
+
+public class Auto extends Fahrzeug {
+    private String aufbau;
     private boolean hatNavi;
 
+    // Konstruktor 2: Dieser wird von der GUI aufgerufen
     public Auto(String marke, String modell, int hubraum, String treibstoff,
-                int kmStand, int leistungPS, String erstzulassung,
-                String aussenfarbe, double leergewicht, double preis,
+                int kmStand, int ps, LocalDate erstzulassung,
+                String aussenfarbe, int leergewicht,
                 String aufbau, boolean hatNavi) {
 
-        // Weitergabe an die Basisklasse
-        super(marke, modell, hubraum, treibstoff, kmStand, leistungPS,
-                erstzulassung, aussenfarbe, leergewicht, preis);
+        // HIER passiert die Magie: Wir passen die Daten an
+        super(
+                marke,
+                modell,
+                hubraum,
+                treibstoff,
+                kmStand,
+                ps,
+                erstzulassung.toString(), // WICHTIG: Datum zu Text machen!
+                aussenfarbe,
+                (double) leergewicht,     // WICHTIG: int zu double machen!
+                0.0                       // WICHTIG: Standard-Preis mitgeben!
+        );
 
-        this.art = art;
+        this.aufbau = aufbau;
         this.hatNavi = hatNavi;
     }
 
-    public String getArt() {
-        return art;
-    }
-
-    public boolean isHatNavi() {
-        return hatNavi;
-    }
+    public String getAufbau() { return aufbau; }
+    public boolean isHatNavi() { return hatNavi; }
 }
