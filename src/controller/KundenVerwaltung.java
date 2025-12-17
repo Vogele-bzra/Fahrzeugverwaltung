@@ -1,31 +1,37 @@
-package controller;
+package controller; // Achte auf dein Package!
 
 import model.Kunde;
+import Service.JsonSpeicherservice;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class KundenVerwaltung {
 
     private List<Kunde> kundenListe;
+    private JsonSpeicherservice speicherService;
 
     public KundenVerwaltung() {
-        this.kundenListe = new ArrayList<>();
+        this.speicherService = new JsonSpeicherservice();
+        // Beim Start direkt laden
+        this.kundenListe = speicherService.ladeKunden();
     }
 
     public void kundeHinzufuegen(Kunde k) {
         kundenListe.add(k);
-        System.out.println("Kunde gespeichert: " + k.getNachname());
+        speicherService.speichereKunden(kundenListe); // Speichern bei Änderung
     }
 
     public void kundeLoeschen(Kunde k) {
         kundenListe.remove(k);
+        speicherService.speichereKunden(kundenListe); // Speichern bei Änderung
     }
 
     public List<Kunde> getAlleKunden() {
         return kundenListe;
     }
 
-    // Suchfunktion für später (nach Nachname)
+    // Falls du eine Suche für Kunden hast:
     public List<Kunde> sucheKunde(String nachname) {
         List<Kunde> treffer = new ArrayList<>();
         for (Kunde k : kundenListe) {

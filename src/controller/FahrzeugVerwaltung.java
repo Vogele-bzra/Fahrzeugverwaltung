@@ -1,29 +1,36 @@
-package controller;
+package controller; // Achte auf dein Package! (evtl. nur "controller")
 
 import model.Fahrzeug;
+import Service.JsonSpeicherservice; // Importiert deinen neuen JSON-Dienst
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FahrzeugVerwaltung {
 
     private List<Fahrzeug> fahrzeugListe;
+    private JsonSpeicherservice speicherService; // Hier nutzen wir direkt die Klasse, kein Interface mehr
 
     public FahrzeugVerwaltung() {
-        this.fahrzeugListe = new ArrayList<>();
+        this.speicherService = new JsonSpeicherservice();
+        // Beim Start direkt laden
+        this.fahrzeugListe = speicherService.ladeFahrzeuge();
     }
 
-    // Die GUI ruft genau DIESEN Namen auf:
     public void fahrzeugHinzufuegen(Fahrzeug fahrzeug) {
         fahrzeugListe.add(fahrzeug);
-        System.out.println("Fahrzeug hinzugefügt: " + fahrzeug.getMarke());
+        speicherService.speichereFahrzeuge(fahrzeugListe); // Speichern bei Änderung
     }
 
-    // Und diesen hier auch:
+    public void fahrzeugLoeschen(Fahrzeug f) {
+        fahrzeugListe.remove(f);
+        speicherService.speichereFahrzeuge(fahrzeugListe); // Speichern bei Änderung
+    }
+
     public List<Fahrzeug> getAlleFahrzeuge() {
         return fahrzeugListe;
     }
 
-    // Suchfunktion (brauchen wir später)
     public List<Fahrzeug> sucheNachMarke(String marke) {
         List<Fahrzeug> ergebnis = new ArrayList<>();
         for (Fahrzeug f : fahrzeugListe) {
@@ -32,9 +39,5 @@ public class FahrzeugVerwaltung {
             }
         }
         return ergebnis;
-    }
-
-    public void fahrzeugLoeschen(Fahrzeug f) {
-        fahrzeugListe.remove(f);
     }
 }
