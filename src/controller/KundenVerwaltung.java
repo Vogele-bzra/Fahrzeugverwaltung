@@ -30,10 +30,8 @@ public class KundenVerwaltung {
         return kundenListe;
     }
 
-    // --- NEU: DIE SUCHFUNKTION ---
     public List<Kunde> sucheKunde(String suchText) {
         List<Kunde> treffer = new ArrayList<>();
-        // Wir machen alles klein (.toLowerCase), damit "Meier" und "meier" gefunden wird
         String gesucht = suchText.toLowerCase();
 
         for (Kunde k : kundenListe) {

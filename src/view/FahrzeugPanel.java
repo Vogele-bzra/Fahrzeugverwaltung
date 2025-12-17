@@ -24,7 +24,6 @@ public class FahrzeugPanel extends JPanel {
     private JList<Fahrzeug> anzeigeListe;
     private DefaultListModel<Fahrzeug> listModel;
 
-    // Konstruktor ohne Parameter
     public FahrzeugPanel() {
         verwaltung = new FahrzeugVerwaltung();
         setLayout(new BorderLayout(10, 10));
@@ -118,13 +117,11 @@ public class FahrzeugPanel extends JPanel {
         scrollPane.setBorder(BorderFactory.createTitledBorder("Fahrzeugbestand"));
         add(scrollPane, BorderLayout.SOUTH);
 
-        // Listener
         btnSpeichern.addActionListener(e -> speichern());
         btnSuchen.addActionListener(e -> suchErgebnisseAnzeigen());
         btnAlle.addActionListener(e -> { txtSuche.setText(""); listeAnzeigen(); });
         btnLoeschen.addActionListener(e -> eintragLoeschen());
 
-        // Liste initial laden
         listeAnzeigen();
     }
 

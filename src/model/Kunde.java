@@ -68,7 +68,6 @@ public class Kunde {
 
     @Override
     public String toString() {
-        // Das wird später in der Liste angezeigt
         return nachname + " " + vorname + " (" + ort + ")";
     }
 }

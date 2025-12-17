@@ -22,10 +22,10 @@ public class Auto extends Fahrzeug {
                 treibstoff,
                 kmStand,
                 ps,
-                erstzulassung.toString(), // WICHTIG: Datum zu Text machen!
+                erstzulassung.toString(),
                 aussenfarbe,
-                (double) leergewicht,     // WICHTIG: int zu double machen!
-                preis                     // WICHTIG: Standard-Preis mitgeben!
+                (double) leergewicht,
+                preis
         );
 
         this.aufbau = aufbau;

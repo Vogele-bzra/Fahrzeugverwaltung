@@ -19,12 +19,12 @@ public class FahrzeugVerwaltung {
 
     public void fahrzeugHinzufuegen(Fahrzeug fahrzeug) {
         fahrzeugListe.add(fahrzeug);
-        speicherService.speichereFahrzeuge(fahrzeugListe); // Speichern bei jeder Änderung
+        speicherService.speichereFahrzeuge(fahrzeugListe);
     }
 
     public void fahrzeugLoeschen(Fahrzeug f) {
         fahrzeugListe.remove(f);
-        speicherService.speichereFahrzeuge(fahrzeugListe); // Speichern bei jeder Änderung
+        speicherService.speichereFahrzeuge(fahrzeugListe);
     }
 
     public List<Fahrzeug> getAlleFahrzeuge() {

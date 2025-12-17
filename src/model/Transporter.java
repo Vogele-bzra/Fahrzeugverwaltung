@@ -22,10 +22,10 @@ public class Transporter extends Fahrzeug {
                 treibstoff,
                 kmStand,
                 ps,
-                erstzulassung.toString(), // Datum zu String
+                erstzulassung.toString(),
                 aussenfarbe,
-                (double) leergewicht,     // int zu double
-                preis                  // Standard-Preis
+                (double) leergewicht,
+                preis
         );
 
         this.maximaleZuladung = maximaleZuladung;

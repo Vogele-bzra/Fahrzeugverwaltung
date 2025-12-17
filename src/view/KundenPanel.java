@@ -18,12 +18,10 @@ public class KundenPanel extends JPanel {
     private JList<Kunde> kundenListe;
     private DefaultListModel<Kunde> listModel;
 
-    // Konstruktor ohne Parameter
     public KundenPanel() {
         this.verwaltung = new KundenVerwaltung();
         setLayout(new BorderLayout(10, 10));
 
-        // --- Formular ---
         JPanel formPanel = new JPanel(new GridLayout(0, 2, 5, 5));
         formPanel.setBorder(BorderFactory.createTitledBorder("Neuen Kunden erfassen"));
 
@@ -59,12 +57,10 @@ public class KundenPanel extends JPanel {
         txtGeburtsdatum = new JTextField("2000-01-01");
         formPanel.add(txtGeburtsdatum);
 
-        // --- Buttons ---
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
         JButton btnSpeichern = new JButton("Speichern");
 
-        // Suchelemente
         JLabel lblSuche = new JLabel("Suche (Nachname):");
         txtSuche = new JTextField(8);
         JButton btnSuchen = new JButton("Go");
@@ -72,7 +68,6 @@ public class KundenPanel extends JPanel {
 
         JButton btnLoeschen = new JButton("Löschen");
         btnLoeschen.setForeground(Color.RED);
-        // Button ist immer aktiv!
 
         buttonPanel.add(btnSpeichern);
         buttonPanel.add(Box.createHorizontalStrut(20));
@@ -83,7 +78,6 @@ public class KundenPanel extends JPanel {
         buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(btnLoeschen);
 
-        // --- Liste ---
         listModel = new DefaultListModel<>();
         kundenListe = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(kundenListe);
@@ -93,10 +87,8 @@ public class KundenPanel extends JPanel {
         add(buttonPanel, BorderLayout.CENTER);
         add(scrollPane, BorderLayout.SOUTH);
 
-        // Liste initial füllen
         listeAktualisieren(verwaltung.getAlleKunden());
 
-        // --- Logik (Listener) ---
         btnSpeichern.addActionListener(e -> kundeSpeichern());
         btnLoeschen.addActionListener(e -> kundeLoeschen());
 
@@ -160,7 +152,6 @@ public class KundenPanel extends JPanel {
             listModel.addElement(k);
         }
         if (listModel.isEmpty()) {
-            // Optional: JOptionPane.showMessageDialog(this, "Keine Kunden gefunden.");
         }
     }
 }

@@ -5,7 +5,6 @@ public class DatenContainer {
     private List<Auto> autos;
     private List<Transporter> transporter;
 
-    // Leerer Konstruktor (wichtig für Gson)
     public DatenContainer() {}
 
     public DatenContainer(List<Auto> autos, List<Transporter> transporter) {
