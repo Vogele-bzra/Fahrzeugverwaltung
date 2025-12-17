@@ -6,7 +6,10 @@ public class Auto extends Fahrzeug {
     private String aufbau;
     private boolean hatNavi;
 
-    // Konstruktor 2: Dieser wird von der GUI aufgerufen
+    public Auto(){
+        super();
+    }
+
     public Auto(String marke, String modell, int hubraum, String treibstoff,
                 int kmStand, int ps, LocalDate erstzulassung,
                 String aussenfarbe, int leergewicht, double preis,

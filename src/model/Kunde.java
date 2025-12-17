@@ -12,6 +12,8 @@ public class Kunde {
     private String email;
     private LocalDate geburtsdatum;
 
+    public Kunde(){}
+
     public Kunde(String vorname, String nachname, String strasse, String plz, String ort, String telefon, String email, LocalDate geburtsdatum) {
         this.vorname = vorname;
         this.nachname = nachname;

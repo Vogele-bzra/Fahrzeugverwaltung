@@ -25,6 +25,10 @@ public abstract class Fahrzeug {
         this.preis = preis;
     }
 
+    public Fahrzeug() {
+
+    }
+
 
     public String getMarke() { return marke; }
     public String getModell() { return modell; }
