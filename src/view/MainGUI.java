@@ -14,20 +14,15 @@ import java.time.LocalDate;
 public class MainGUI extends JFrame {
 
     private FahrzeugVerwaltung verwaltung;
-
-    // --- GUI Komponenten ---
     private JComboBox<String> cmbTyp;
     private JTextField txtMarke, txtModell, txtPS, txtHubraum, txtKm, txtFarbe, txtGewicht, txtPreis;
     private JComboBox<String> cmbTreibstoff;
-
-    // Spezifisch für Auto
     private JTextField txtAufbau;
     private JCheckBox chkNavi;
-
-    // Spezifisch für Transporter
     private JTextField txtZuladung;
-
     private JTextArea ausgabeBereich;
+    private JTextField txtSuche;
+
 
     public MainGUI() {
         verwaltung = new FahrzeugVerwaltung();
@@ -118,18 +113,27 @@ public class MainGUI extends JFrame {
         JButton btnSpeichern = new JButton("Speichern");
         JButton btnListe = new JButton("Liste aktualisieren");
 
+        // Suchelemente definieren
+        JLabel lblSuche = new JLabel(" | Suche (Marke):");
+        txtSuche = new JTextField(10); // Feld ist 10 Zeichen breit
+        JButton btnSuchen = new JButton("Suchen");
+
         // Ein extra Panel für die Buttons unten
         JPanel buttonPanel = new JPanel(new FlowLayout());
+
+        // Alle Elemente nacheinander ins Panel legen
         buttonPanel.add(btnSpeichern);
         buttonPanel.add(btnListe);
+        buttonPanel.add(lblSuche);    // Neu
+        buttonPanel.add(txtSuche);    // Neu
+        buttonPanel.add(btnSuchen);   // Neu
 
         // Alles zusammenbauen
         add(formPanel, BorderLayout.NORTH);
-        add(buttonPanel, BorderLayout.CENTER); // Buttons in die Mitte unter das Formular
-
+        add(buttonPanel, BorderLayout.CENTER);
         ausgabeBereich = new JTextArea(10, 30);
         ausgabeBereich.setEditable(false);
-        add(new JScrollPane(ausgabeBereich), BorderLayout.SOUTH); // Liste ganz unten
+        add(new JScrollPane(ausgabeBereich), BorderLayout.SOUTH);
 
         // --- Logik ---
         btnSpeichern.addActionListener(new ActionListener() {
@@ -143,6 +147,13 @@ public class MainGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 listeAnzeigen();
+            }
+        });
+
+        btnSuchen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                suchErgebnisseAnzeigen();
             }
         });
     }
@@ -198,6 +209,26 @@ public class MainGUI extends JFrame {
         ausgabeBereich.append("--- Bestand ---\n");
         for (Fahrzeug f : verwaltung.getAlleFahrzeuge()) {
             ausgabeBereich.append(f.getMarke() + " " + f.getModell() + " (" + f.getLeistung() + " PS), Farbe: " + f.getAussenfarbe() + "\n");
+        }
+    }
+
+    private void suchErgebnisseAnzeigen() {
+        String gesuchteMarke = txtSuche.getText();
+
+        // Liste leeren und Überschrift setzen
+        ausgabeBereich.setText("");
+        ausgabeBereich.append("--- Suchergebnisse für '" + gesuchteMarke + "' ---\n");
+
+        // Die Suche im Controller aufrufen
+        // WICHTIG: java.util.List schreiben, da Swing auch eine 'List' hat
+        java.util.List<Fahrzeug> treffer = verwaltung.sucheNachMarke(gesuchteMarke);
+
+        if (treffer.isEmpty()) {
+            ausgabeBereich.append("Keine Fahrzeuge gefunden.");
+        } else {
+            for (Fahrzeug f : treffer) {
+                ausgabeBereich.append(f.getMarke() + " " + f.getModell() + " (" + f.getLeistung() + " PS)\n");
+            }
         }
     }
 }
