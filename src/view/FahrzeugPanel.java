@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 
-// WICHTIG: extends JPanel statt JFrame
 public class FahrzeugPanel extends JPanel {
 
     private FahrzeugVerwaltung verwaltung;
@@ -25,6 +24,7 @@ public class FahrzeugPanel extends JPanel {
     private JList<Fahrzeug> anzeigeListe;
     private DefaultListModel<Fahrzeug> listModel;
 
+    // Konstruktor ohne Parameter
     public FahrzeugPanel() {
         verwaltung = new FahrzeugVerwaltung();
         setLayout(new BorderLayout(10, 10));
@@ -92,6 +92,7 @@ public class FahrzeugPanel extends JPanel {
         JButton btnSpeichern = new JButton("Speichern");
         JButton btnLoeschen = new JButton("Löschen");
         btnLoeschen.setForeground(Color.RED);
+        // Hier fehlt jetzt der Check, der Button ist immer aktiv!
 
         JLabel lblSuche = new JLabel("Suche:");
         txtSuche = new JTextField(8);
@@ -117,11 +118,14 @@ public class FahrzeugPanel extends JPanel {
         scrollPane.setBorder(BorderFactory.createTitledBorder("Fahrzeugbestand"));
         add(scrollPane, BorderLayout.SOUTH);
 
-        // Listener (Lambda Schreibweise - kürzer & moderner)
+        // Listener
         btnSpeichern.addActionListener(e -> speichern());
         btnSuchen.addActionListener(e -> suchErgebnisseAnzeigen());
         btnAlle.addActionListener(e -> { txtSuche.setText(""); listeAnzeigen(); });
         btnLoeschen.addActionListener(e -> eintragLoeschen());
+
+        // Liste initial laden
+        listeAnzeigen();
     }
 
     private void speichern() {

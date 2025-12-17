@@ -13,7 +13,6 @@ public class KundenVerwaltung {
 
     public KundenVerwaltung() {
         this.speicherService = new JsonSpeicherservice();
-
         this.kundenListe = speicherService.ladeKunden();
     }
 
@@ -29,5 +28,19 @@ public class KundenVerwaltung {
 
     public List<Kunde> getAlleKunden() {
         return kundenListe;
+    }
+
+    // --- NEU: DIE SUCHFUNKTION ---
+    public List<Kunde> sucheKunde(String suchText) {
+        List<Kunde> treffer = new ArrayList<>();
+        // Wir machen alles klein (.toLowerCase), damit "Meier" und "meier" gefunden wird
+        String gesucht = suchText.toLowerCase();
+
+        for (Kunde k : kundenListe) {
+            if (k.getNachname().toLowerCase().contains(gesucht)) {
+                treffer.add(k);
+            }
+        }
+        return treffer;
     }
 }

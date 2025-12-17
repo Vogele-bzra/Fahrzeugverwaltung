@@ -7,15 +7,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 public class KundenPanel extends JPanel {
 
     private KundenVerwaltung verwaltung;
 
     private JTextField txtVorname, txtNachname, txtStrasse, txtPlz, txtOrt, txtTelefon, txtEmail, txtGeburtsdatum;
+    private JTextField txtSuche;
     private JList<Kunde> kundenListe;
     private DefaultListModel<Kunde> listModel;
 
+    // Konstruktor ohne Parameter
     public KundenPanel() {
         this.verwaltung = new KundenVerwaltung();
         setLayout(new BorderLayout(10, 10));
@@ -58,11 +61,25 @@ public class KundenPanel extends JPanel {
 
         // --- Buttons ---
         JPanel buttonPanel = new JPanel(new FlowLayout());
-        JButton btnSpeichern = new JButton("Kunde speichern");
-        JButton btnLoeschen = new JButton("Kunde löschen");
+
+        JButton btnSpeichern = new JButton("Speichern");
+
+        // Suchelemente
+        JLabel lblSuche = new JLabel("Suche (Nachname):");
+        txtSuche = new JTextField(8);
+        JButton btnSuchen = new JButton("Go");
+        JButton btnReset = new JButton("Alle");
+
+        JButton btnLoeschen = new JButton("Löschen");
         btnLoeschen.setForeground(Color.RED);
+        // Button ist immer aktiv!
 
         buttonPanel.add(btnSpeichern);
+        buttonPanel.add(Box.createHorizontalStrut(20));
+        buttonPanel.add(lblSuche);
+        buttonPanel.add(txtSuche);
+        buttonPanel.add(btnSuchen);
+        buttonPanel.add(btnReset);
         buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(btnLoeschen);
 
@@ -72,14 +89,27 @@ public class KundenPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(kundenListe);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Kundenliste"));
 
-        // Alles zusammenbauen
         add(formPanel, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.CENTER);
         add(scrollPane, BorderLayout.SOUTH);
 
-        // --- Logik ---
+        // Liste initial füllen
+        listeAktualisieren(verwaltung.getAlleKunden());
+
+        // --- Logik (Listener) ---
         btnSpeichern.addActionListener(e -> kundeSpeichern());
         btnLoeschen.addActionListener(e -> kundeLoeschen());
+
+        btnSuchen.addActionListener(e -> {
+            String suchText = txtSuche.getText();
+            List<Kunde> ergebnis = verwaltung.sucheKunde(suchText);
+            listeAktualisieren(ergebnis);
+        });
+
+        btnReset.addActionListener(e -> {
+            txtSuche.setText("");
+            listeAktualisieren(verwaltung.getAlleKunden());
+        });
     }
 
     private void kundeSpeichern() {
@@ -96,10 +126,9 @@ public class KundenPanel extends JPanel {
             Kunde k = new Kunde(vorname, nachname, strasse, plz, ort, telefon, email, geburt);
             verwaltung.kundeHinzufuegen(k);
 
-            updateListe();
+            listeAktualisieren(verwaltung.getAlleKunden());
             JOptionPane.showMessageDialog(this, "Kunde gespeichert!");
 
-            // Felder leeren
             txtVorname.setText("");
             txtNachname.setText("");
             txtStrasse.setText("");
@@ -119,16 +148,19 @@ public class KundenPanel extends JPanel {
         Kunde k = kundenListe.getSelectedValue();
         if (k != null) {
             verwaltung.kundeLoeschen(k);
-            updateListe();
+            listeAktualisieren(verwaltung.getAlleKunden());
         } else {
             JOptionPane.showMessageDialog(this, "Bitte erst einen Kunden auswählen.");
         }
     }
 
-    private void updateListe() {
+    private void listeAktualisieren(List<Kunde> daten) {
         listModel.clear();
-        for (Kunde k : verwaltung.getAlleKunden()) {
+        for (Kunde k : daten) {
             listModel.addElement(k);
+        }
+        if (listModel.isEmpty()) {
+            // Optional: JOptionPane.showMessageDialog(this, "Keine Kunden gefunden.");
         }
     }
 }
