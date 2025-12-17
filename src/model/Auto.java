@@ -12,7 +12,6 @@ public class Auto extends Fahrzeug {
                 String aussenfarbe, int leergewicht, double preis,
                 String aufbau, boolean hatNavi) {
 
-        // HIER passiert die Magie: Wir passen die Daten an
         super(
                 marke,
                 modell,
