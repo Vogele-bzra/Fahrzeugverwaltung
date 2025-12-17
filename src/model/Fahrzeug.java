@@ -70,6 +70,7 @@ public abstract class Fahrzeug {
 
     @Override
     public String toString() {
-        return marke + " " + modell;
+        // Das wird in der Liste angezeigt
+        return marke + " " + modell + " (" + leistung + " PS) | " + aussenfarbe + " | CHF " + preis;
     }
 }

@@ -9,7 +9,7 @@ public class Auto extends Fahrzeug {
     // Konstruktor 2: Dieser wird von der GUI aufgerufen
     public Auto(String marke, String modell, int hubraum, String treibstoff,
                 int kmStand, int ps, LocalDate erstzulassung,
-                String aussenfarbe, int leergewicht,
+                String aussenfarbe, int leergewicht, double preis,
                 String aufbau, boolean hatNavi) {
 
         // HIER passiert die Magie: Wir passen die Daten an
@@ -23,7 +23,7 @@ public class Auto extends Fahrzeug {
                 erstzulassung.toString(), // WICHTIG: Datum zu Text machen!
                 aussenfarbe,
                 (double) leergewicht,     // WICHTIG: int zu double machen!
-                0.0                       // WICHTIG: Standard-Preis mitgeben!
+                preis                     // WICHTIG: Standard-Preis mitgeben!
         );
 
         this.aufbau = aufbau;

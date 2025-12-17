@@ -14,139 +14,120 @@ import java.time.LocalDate;
 public class MainGUI extends JFrame {
 
     private FahrzeugVerwaltung verwaltung;
+
     private JComboBox<String> cmbTyp;
     private JTextField txtMarke, txtModell, txtPS, txtHubraum, txtKm, txtFarbe, txtGewicht, txtPreis;
     private JComboBox<String> cmbTreibstoff;
+
     private JTextField txtAufbau;
     private JCheckBox chkNavi;
     private JTextField txtZuladung;
-    private JTextArea ausgabeBereich;
+
     private JTextField txtSuche;
 
+    private JList<Fahrzeug> anzeigeListe;
+    private DefaultListModel<Fahrzeug> listModel;
 
     public MainGUI() {
         verwaltung = new FahrzeugVerwaltung();
 
         setTitle("IdealCar4You - Erfassungsmaske");
-        setSize(500, 700); // Fenster etwas höher machen
+        setSize(550, 750);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // --- Eingabe Panel (Formular) ---
-        // 0 Zeilen bedeutet: "So viele wie nötig"
         JPanel formPanel = new JPanel(new GridLayout(0, 2, 5, 5));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Zeile 1: Typ
         formPanel.add(new JLabel("Fahrzeugtyp:"));
         String[] typen = {"Auto", "Transporter"};
         cmbTyp = new JComboBox<>(typen);
         formPanel.add(cmbTyp);
 
-        // Zeile 2: Marke
         formPanel.add(new JLabel("Marke:"));
         txtMarke = new JTextField();
         formPanel.add(txtMarke);
 
-        // Zeile 3: Modell
         formPanel.add(new JLabel("Modell:"));
         txtModell = new JTextField();
         formPanel.add(txtModell);
 
-        // Zeile 4: PS
         formPanel.add(new JLabel("Leistung (PS):"));
         txtPS = new JTextField();
         formPanel.add(txtPS);
 
-        // Zeile 5: Hubraum
         formPanel.add(new JLabel("Hubraum (ccm):"));
         txtHubraum = new JTextField();
         formPanel.add(txtHubraum);
 
-        // Zeile 6: Treibstoff
         formPanel.add(new JLabel("Treibstoff:"));
         String[] treibstoffe = {"Benzin", "Diesel", "Elektro", "Hybrid"};
         cmbTreibstoff = new JComboBox<>(treibstoffe);
         formPanel.add(cmbTreibstoff);
 
-        // Zeile 7: KM-Stand
         formPanel.add(new JLabel("KM-Stand:"));
         txtKm = new JTextField();
         formPanel.add(txtKm);
 
-        // Zeile 8: Farbe
         formPanel.add(new JLabel("Aussenfarbe:"));
         txtFarbe = new JTextField();
         formPanel.add(txtFarbe);
 
-        // Zeile 9: Leergewicht
         formPanel.add(new JLabel("Leergewicht (kg):"));
         txtGewicht = new JTextField();
         formPanel.add(txtGewicht);
 
-        // Zeile 10: Preis (fehlt im Model noch als Variable, aber wir erfassen ihn schon mal)
         formPanel.add(new JLabel("Preis (CHF):"));
         txtPreis = new JTextField();
         formPanel.add(txtPreis);
 
-        // --- Trenner ---
         formPanel.add(new JSeparator());
         formPanel.add(new JLabel("--- Spezifische Daten ---"));
 
-        // Zeile 11: Aufbau (Nur für Auto relevant)
         formPanel.add(new JLabel("Aufbau (nur Auto):"));
         txtAufbau = new JTextField("Kombi");
         formPanel.add(txtAufbau);
 
-        // Zeile 12: Navi (Nur für Auto relevant)
         formPanel.add(new JLabel("Navigationssystem:"));
         chkNavi = new JCheckBox("Vorhanden");
         formPanel.add(chkNavi);
 
-        // Zeile 13: Zuladung (Nur für Transporter relevant)
         formPanel.add(new JLabel("Max. Zuladung (kg, nur Transp.):"));
         txtZuladung = new JTextField("0");
         formPanel.add(txtZuladung);
 
-        // Buttons
         JButton btnSpeichern = new JButton("Speichern");
-        JButton btnListe = new JButton("Liste aktualisieren");
+        JButton btnLoeschen = new JButton("Markiertes löschen");
+        btnLoeschen.setForeground(Color.RED);
 
-        // Suchelemente definieren
-        JLabel lblSuche = new JLabel(" | Suche (Marke):");
-        txtSuche = new JTextField(10); // Feld ist 10 Zeichen breit
-        JButton btnSuchen = new JButton("Suchen");
+        JLabel lblSuche = new JLabel("Suche:");
+        txtSuche = new JTextField(8);
+        JButton btnSuchen = new JButton("Go");
+        JButton btnAlle = new JButton("Alle");
 
-        // Ein extra Panel für die Buttons unten
         JPanel buttonPanel = new JPanel(new FlowLayout());
-
-        // Alle Elemente nacheinander ins Panel legen
         buttonPanel.add(btnSpeichern);
-        buttonPanel.add(btnListe);
-        buttonPanel.add(lblSuche);    // Neu
-        buttonPanel.add(txtSuche);    // Neu
-        buttonPanel.add(btnSuchen);   // Neu
+        buttonPanel.add(Box.createHorizontalStrut(15));
+        buttonPanel.add(lblSuche);
+        buttonPanel.add(txtSuche);
+        buttonPanel.add(btnSuchen);
+        buttonPanel.add(btnAlle);
+        buttonPanel.add(Box.createHorizontalStrut(15));
+        buttonPanel.add(btnLoeschen);
 
-        // Alles zusammenbauen
         add(formPanel, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.CENTER);
-        ausgabeBereich = new JTextArea(10, 30);
-        ausgabeBereich.setEditable(false);
-        add(new JScrollPane(ausgabeBereich), BorderLayout.SOUTH);
 
-        // --- Logik ---
+        listModel = new DefaultListModel<>();
+        anzeigeListe = new JList<>(listModel);
+        anzeigeListe.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        add(new JScrollPane(anzeigeListe), BorderLayout.SOUTH);
+
         btnSpeichern.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 speichern();
-            }
-        });
-
-        btnListe.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                listeAnzeigen();
             }
         });
 
@@ -156,78 +137,103 @@ public class MainGUI extends JFrame {
                 suchErgebnisseAnzeigen();
             }
         });
+
+        btnAlle.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                txtSuche.setText("");
+                listeAnzeigen();
+            }
+        });
+
+        btnLoeschen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                eintragLoeschen();
+            }
+        });
     }
 
     private void speichern() {
         try {
-            // 1. Alle Texte auslesen
             String typ = (String) cmbTyp.getSelectedItem();
             String marke = txtMarke.getText();
             String modell = txtModell.getText();
             String farbe = txtFarbe.getText();
             String treibstoff = (String) cmbTreibstoff.getSelectedItem();
 
-            // 2. Zahlen umwandeln (kann abstürzen, wenn Text drin steht -> try/catch)
             int ps = Integer.parseInt(txtPS.getText());
             int hubraum = Integer.parseInt(txtHubraum.getText());
             int km = Integer.parseInt(txtKm.getText());
             int gewicht = Integer.parseInt(txtGewicht.getText());
-            // Preis ignorieren wir kurz für das Objekt, da Konstruktor angepasst wurde
-            // double preis = Double.parseDouble(txtPreis.getText());
+            double preis = Double.parseDouble(txtPreis.getText());
 
             Fahrzeug neuesFahrzeug;
 
-            // 3. Je nach Typ das richtige Objekt bauen
             if (typ.equals("Auto")) {
                 String aufbau = txtAufbau.getText();
                 boolean hatNavi = chkNavi.isSelected();
-
-                neuesFahrzeug = new Auto(marke, modell, hubraum, treibstoff, km, ps, LocalDate.now(), farbe, gewicht, aufbau, hatNavi);
+                neuesFahrzeug = new Auto(marke, modell, hubraum, treibstoff, km, ps, LocalDate.now(), farbe, gewicht, preis, aufbau, hatNavi);
             } else {
                 int zuladung = Integer.parseInt(txtZuladung.getText());
-
-                neuesFahrzeug = new Transporter(marke, modell, hubraum, treibstoff, km, ps, LocalDate.now(), farbe, gewicht, zuladung);
+                neuesFahrzeug = new Transporter(marke, modell, hubraum, treibstoff, km, ps, LocalDate.now(), farbe, gewicht, preis, zuladung);
             }
 
-            // 4. Ab zum Controller
             verwaltung.fahrzeugHinzufuegen(neuesFahrzeug);
 
-            // 5. Feedback
-            JOptionPane.showMessageDialog(this, "Fahrzeug gespeichert!");
+            JOptionPane.showMessageDialog(this, "Gespeichert!");
             listeAnzeigen();
 
+            txtMarke.setText("");
+            txtModell.setText("");
+            txtPS.setText("");
+            txtPreis.setText("");
+
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Bitte bei Zahlenfeldern (PS, KM, Gewicht) nur Ziffern eingeben!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Bitte bei Zahlenfeldern nur Ziffern eingeben! (Preis mit Punkt)", "Fehler", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());
             ex.printStackTrace();
         }
     }
 
+    private void eintragLoeschen() {
+        Fahrzeug gewaehltes = anzeigeListe.getSelectedValue();
+
+        if (gewaehltes != null) {
+            int antwort = JOptionPane.showConfirmDialog(this,
+                    "Möchten Sie " + gewaehltes.getMarke() + " " + gewaehltes.getModell() + " wirklich löschen?",
+                    "Löschen bestätigen", JOptionPane.YES_NO_OPTION);
+
+            if (antwort == JOptionPane.YES_OPTION) {
+                verwaltung.fahrzeugLoeschen(gewaehltes);
+                listeAnzeigen();
+                JOptionPane.showMessageDialog(this, "Gelöscht!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Bitte wählen Sie erst ein Fahrzeug in der Liste aus!");
+        }
+    }
+
     private void listeAnzeigen() {
-        ausgabeBereich.setText("");
-        ausgabeBereich.append("--- Bestand ---\n");
+        listModel.clear();
         for (Fahrzeug f : verwaltung.getAlleFahrzeuge()) {
-            ausgabeBereich.append(f.getMarke() + " " + f.getModell() + " (" + f.getLeistung() + " PS), Farbe: " + f.getAussenfarbe() + "\n");
+            listModel.addElement(f);
         }
     }
 
     private void suchErgebnisseAnzeigen() {
         String gesuchteMarke = txtSuche.getText();
+        listModel.clear();
 
-        // Liste leeren und Überschrift setzen
-        ausgabeBereich.setText("");
-        ausgabeBereich.append("--- Suchergebnisse für '" + gesuchteMarke + "' ---\n");
-
-        // Die Suche im Controller aufrufen
-        // WICHTIG: java.util.List schreiben, da Swing auch eine 'List' hat
         java.util.List<Fahrzeug> treffer = verwaltung.sucheNachMarke(gesuchteMarke);
 
         if (treffer.isEmpty()) {
-            ausgabeBereich.append("Keine Fahrzeuge gefunden.");
+            JOptionPane.showMessageDialog(this, "Keine Fahrzeuge gefunden.");
+            listeAnzeigen();
         } else {
             for (Fahrzeug f : treffer) {
-                ausgabeBereich.append(f.getMarke() + " " + f.getModell() + " (" + f.getLeistung() + " PS)\n");
+                listModel.addElement(f);
             }
         }
     }

@@ -8,7 +8,7 @@ public class Transporter extends Fahrzeug {
     // Konstruktor für die GUI
     public Transporter(String marke, String modell, int hubraum, String treibstoff,
                        int kmStand, int ps, LocalDate erstzulassung,
-                       String aussenfarbe, int leergewicht,
+                       String aussenfarbe, int leergewicht, double preis,
                        int maximaleZuladung) {
 
         super(
@@ -21,7 +21,7 @@ public class Transporter extends Fahrzeug {
                 erstzulassung.toString(), // Datum zu String
                 aussenfarbe,
                 (double) leergewicht,     // int zu double
-                0.0                       // Standard-Preis
+                preis                  // Standard-Preis
         );
 
         this.maximaleZuladung = maximaleZuladung;
