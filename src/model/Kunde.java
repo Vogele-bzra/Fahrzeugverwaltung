@@ -68,6 +68,6 @@ public class Kunde {
 
     @Override
     public String toString() {
-        return nachname + " " + vorname + " (" + ort + ")";
+        return nachname + " " + vorname + " (Tel: "+ telefon + ", "+ email +", " +strasse + ", " + ort + ")";
     }
 }

@@ -91,7 +91,7 @@ public class FahrzeugPanel extends JPanel {
         JButton btnSpeichern = new JButton("Speichern");
         JButton btnLoeschen = new JButton("Löschen");
         btnLoeschen.setForeground(Color.RED);
-        // Hier fehlt jetzt der Check, der Button ist immer aktiv!
+
 
         JLabel lblSuche = new JLabel("Suche:");
         txtSuche = new JTextField(8);
