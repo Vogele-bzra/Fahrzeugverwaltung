@@ -96,7 +96,7 @@ public class FahrzeugPanel extends JPanel {
         JLabel lblSuche = new JLabel("Suche:");
         txtSuche = new JTextField(8);
         JButton btnSuchen = new JButton("Go");
-        JButton btnAlle = new JButton("Reset");
+        JButton btnAlle = new JButton("Alle");
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(btnSpeichern);
