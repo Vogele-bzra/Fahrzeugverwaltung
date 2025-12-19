@@ -1,0 +1,68 @@
+{
+  "autos" : [ {
+    "marke" : "Ford",
+    "modell" : "Mustang gt 500",
+    "hubraum" : 1200,
+    "treibstoff" : "Benzin",
+    "kmStand" : 10,
+    "leistung" : 500,
+    "erstzulassung" : "2025-12-17",
+    "aussenfarbe" : "blau",
+    "leergewicht" : 1200.0,
+    "preis" : 80000.0,
+    "aufbau" : "Sportwagen",
+    "hatNavi" : false
+  }, {
+    "marke" : "Porsche",
+    "modell" : "GT3RS",
+    "hubraum" : 4000,
+    "treibstoff" : "Benzin",
+    "kmStand" : 10,
+    "leistung" : 525,
+    "erstzulassung" : "2025-12-19",
+    "aussenfarbe" : "grau",
+    "leergewicht" : 1450.0,
+    "preis" : 250000.0,
+    "aufbau" : "Sportwagen",
+    "hatNavi" : true
+  }, {
+    "marke" : "Ferrari",
+    "modell" : "488 Pista",
+    "hubraum" : 3900,
+    "treibstoff" : "Benzin",
+    "kmStand" : 10,
+    "leistung" : 720,
+    "erstzulassung" : "2025-12-19",
+    "aussenfarbe" : "rot",
+    "leergewicht" : 1385.0,
+    "preis" : 320000.0,
+    "aufbau" : "Sportwagen",
+    "hatNavi" : true
+  }, {
+    "marke" : "Lamborghini",
+    "modell" : "Urus Performante",
+    "hubraum" : 4000,
+    "treibstoff" : "Benzin",
+    "kmStand" : 10,
+    "leistung" : 666,
+    "erstzulassung" : "2025-12-19",
+    "aussenfarbe" : "gelb",
+    "leergewicht" : 2150.0,
+    "preis" : 260000.0,
+    "aufbau" : "SUV",
+    "hatNavi" : true
+  } ],
+  "transporter" : [ {
+    "marke" : "Ford",
+    "modell" : "Transit",
+    "hubraum" : 2000,
+    "treibstoff" : "Diesel",
+    "kmStand" : 10,
+    "leistung" : 105,
+    "erstzulassung" : "2025-12-17",
+    "aussenfarbe" : "weiss",
+    "leergewicht" : 2098.0,
+    "preis" : 55000.0,
+    "maximaleZuladung" : 3500
+  } ]
+}

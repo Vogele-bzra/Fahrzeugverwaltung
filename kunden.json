@@ -1,0 +1,28 @@
+[ {
+  "vorname" : "Max",
+  "nachname" : "Mustermann",
+  "strasse" : "Musterstrasse 1",
+  "plz" : "97876",
+  "ort" : "Musterstadt",
+  "telefon" : "0778686423",
+  "email" : "max@musterman.com",
+  "geburtsdatum" : [ 2000, 1, 1 ]
+}, {
+  "vorname" : "Darth ",
+  "nachname" : "Vader",
+  "strasse" : "Todessternstrasse 66",
+  "plz" : "867474",
+  "ort" : "Tatooine",
+  "telefon" : "98658725",
+  "email" : "Darthvader@order66.com",
+  "geburtsdatum" : [ 2000, 1, 1 ]
+}, {
+  "vorname" : "Max",
+  "nachname" : "Verstappen",
+  "strasse" : "Grand Corniche",
+  "plz" : "98000",
+  "ort" : "Monaco, Monte-Carlo",
+  "telefon" : "658415765",
+  "email" : "maxverstappen@formula1.nl",
+  "geburtsdatum" : [ 1997, 9, 30 ]
+} ]
