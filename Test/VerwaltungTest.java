@@ -15,12 +15,9 @@ public class VerwaltungTest {
     public void testFahrzeugVerwaltung() {
         System.out.println("--- Start: Test Fahrzeug Logik ---");
 
-        // 1. Setup
         FahrzeugVerwaltung verwaltung = new FahrzeugVerwaltung();
         int anzahlVorher = verwaltung.getAlleFahrzeuge().size();
 
-        // 2. Auto erstellen (Exakt passend zu deinem Konstruktor in Auto.java)
-        // Reihenfolge: Marke, Modell, Hubraum, Treibstoff, KM, PS, Datum, Farbe, Gewicht, Preis, Aufbau, Navi
         Auto meinTestAuto = new Auto(
                 "JUnitMarke",
                 "TestModell",
