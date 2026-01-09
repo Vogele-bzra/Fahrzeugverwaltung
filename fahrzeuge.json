@@ -12,6 +12,32 @@
     "preis" : 80000.0,
     "aufbau" : "American Muscle Car",
     "hatNavi" : false
+  }, {
+    "marke" : "Bugatti",
+    "modell" : "Chiron Pur Sport",
+    "hubraum" : 7993,
+    "treibstoff" : "Benzin",
+    "kmStand" : 2500,
+    "ps" : 1500,
+    "erstzulassung" : "2026-01-09",
+    "aussenfarbe" : "Blau/schwarz",
+    "leergewicht" : 1995.0,
+    "preis" : 3800000.0,
+    "aufbau" : "Coupe",
+    "hatNavi" : true
+  }, {
+    "marke" : "Ferrari",
+    "modell" : "LaFerrari",
+    "hubraum" : 6262,
+    "treibstoff" : "Hybrid",
+    "kmStand" : 12000,
+    "ps" : 963,
+    "erstzulassung" : "2026-01-09",
+    "aussenfarbe" : "Rosso Corsa",
+    "leergewicht" : 1255.0,
+    "preis" : 2500000.0,
+    "aufbau" : "Coupe",
+    "hatNavi" : true
   } ],
   "transporter" : [ ]
 }
