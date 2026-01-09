@@ -6,7 +6,7 @@ public class Auto extends Fahrzeug {
     private String aufbau;
     private boolean hatNavi;
 
-    public Auto(){
+    public Auto() {
         super();
     }
 
@@ -15,23 +15,16 @@ public class Auto extends Fahrzeug {
                 String aussenfarbe, int leergewicht, double preis,
                 String aufbau, boolean hatNavi) {
 
-        super(
-                marke,
-                modell,
-                hubraum,
-                treibstoff,
-                kmStand,
-                ps,
-                erstzulassung.toString(),
-                aussenfarbe,
-                (double) leergewicht,
-                preis
-        );
-
+        super(marke, modell, hubraum, treibstoff, kmStand, ps, erstzulassung.toString(), aussenfarbe, (double) leergewicht, preis);
         this.aufbau = aufbau;
         this.hatNavi = hatNavi;
     }
 
+    // Getter
     public String getAufbau() { return aufbau; }
     public boolean isHatNavi() { return hatNavi; }
+
+    // --- SETTER (NEU) ---
+    public void setAufbau(String aufbau) { this.aufbau = aufbau; }
+    public void setHatNavi(boolean hatNavi) { this.hatNavi = hatNavi; }
 }

@@ -24,6 +24,11 @@ public class FahrzeugPanel extends JPanel {
     private JList<Fahrzeug> anzeigeListe;
     private DefaultListModel<Fahrzeug> listModel;
 
+    // --- NEU: Variablen für Bearbeitung ---
+    private Fahrzeug aktuellBearbeitetesFahrzeug = null;
+    private JButton btnSpeichern; // Oben definiert
+    // --------------------------------------
+
     public FahrzeugPanel() {
         verwaltung = new FahrzeugVerwaltung();
         setLayout(new BorderLayout(10, 10));
@@ -88,17 +93,19 @@ public class FahrzeugPanel extends JPanel {
         txtZuladung = new JTextField("0");
         formPanel.add(txtZuladung);
 
-        JButton btnSpeichern = new JButton("Speichern");
+        // --- BUTTONS ---
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+
+        btnSpeichern = new JButton("Speichern"); // Initialisieren
+
         JButton btnLoeschen = new JButton("Löschen");
         btnLoeschen.setForeground(Color.RED);
-
 
         JLabel lblSuche = new JLabel("Suche:");
         txtSuche = new JTextField(8);
         JButton btnSuchen = new JButton("Go");
-        JButton btnAlle = new JButton("Alle");
+        JButton btnAlle = new JButton("Alle / Reset");
 
-        JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(btnSpeichern);
         buttonPanel.add(Box.createHorizontalStrut(15));
         buttonPanel.add(lblSuche);
@@ -108,25 +115,51 @@ public class FahrzeugPanel extends JPanel {
         buttonPanel.add(Box.createHorizontalStrut(15));
         buttonPanel.add(btnLoeschen);
 
-        add(formPanel, BorderLayout.NORTH);
-        add(buttonPanel, BorderLayout.CENTER);
-
+        // --- LISTE ---
         listModel = new DefaultListModel<>();
         anzeigeListe = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(anzeigeListe);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Fahrzeugbestand"));
-        add(scrollPane, BorderLayout.SOUTH);
 
+        // --- NEU: Listener für Editieren ---
+        anzeigeListe.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                Fahrzeug f = anzeigeListe.getSelectedValue();
+                if (f != null) {
+                    fahrzeugLaden(f);
+                }
+            }
+        });
+
+        // --- LAYOUT FIX ---
+        // Formular und Buttons kommen nach OBEN, Liste in die MITTE
+        JPanel topContainer = new JPanel(new BorderLayout());
+        topContainer.add(formPanel, BorderLayout.CENTER);
+        topContainer.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(topContainer, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // --- EVENTS ---
         btnSpeichern.addActionListener(e -> speichern());
         btnSuchen.addActionListener(e -> suchErgebnisseAnzeigen());
-        btnAlle.addActionListener(e -> { txtSuche.setText(""); listeAnzeigen(); });
+
+        // Reset Button leert jetzt auch die Felder
+        btnAlle.addActionListener(e -> {
+            txtSuche.setText("");
+            felderLeeren();
+            listeAnzeigen();
+        });
+
         btnLoeschen.addActionListener(e -> eintragLoeschen());
 
         listeAnzeigen();
     }
 
+    // --- NEU: Logik für Neu vs. Update ---
     private void speichern() {
         try {
+            // Basisdaten lesen
             String typ = (String) cmbTyp.getSelectedItem();
             String marke = txtMarke.getText();
             String modell = txtModell.getText();
@@ -139,29 +172,118 @@ public class FahrzeugPanel extends JPanel {
             int gewicht = Integer.parseInt(txtGewicht.getText());
             double preis = Double.parseDouble(txtPreis.getText());
 
-            Fahrzeug neuesFahrzeug;
+            // ENTSCHEIDUNG: Update oder Neu?
+            if (aktuellBearbeitetesFahrzeug != null) {
+                // --- UPDATE ---
+                // Wir nutzen Setter auf dem existierenden Objekt
+                aktuellBearbeitetesFahrzeug.setMarke(marke);
+                aktuellBearbeitetesFahrzeug.setModell(modell);
+                aktuellBearbeitetesFahrzeug.setPs(ps);
+                aktuellBearbeitetesFahrzeug.setHubraum(hubraum);
+                aktuellBearbeitetesFahrzeug.setTreibstoff(treibstoff);
+                aktuellBearbeitetesFahrzeug.setKmStand(km);
+                aktuellBearbeitetesFahrzeug.setAussenfarbe(farbe);
+                aktuellBearbeitetesFahrzeug.setLeergewicht((double)gewicht);
+                aktuellBearbeitetesFahrzeug.setPreis(preis);
 
-            if (typ.equals("Auto")) {
-                String aufbau = txtAufbau.getText();
-                boolean hatNavi = chkNavi.isSelected();
-                neuesFahrzeug = new Auto(marke, modell, hubraum, treibstoff, km, ps, LocalDate.now(), farbe, gewicht, preis, aufbau, hatNavi);
+                // Spezifische Daten updaten
+                if (aktuellBearbeitetesFahrzeug instanceof Auto) {
+                    ((Auto) aktuellBearbeitetesFahrzeug).setAufbau(txtAufbau.getText());
+                    ((Auto) aktuellBearbeitetesFahrzeug).setHatNavi(chkNavi.isSelected());
+                } else if (aktuellBearbeitetesFahrzeug instanceof Transporter) {
+                    ((Transporter) aktuellBearbeitetesFahrzeug).setMaxZuladung(Integer.parseInt(txtZuladung.getText()));
+                }
+
+                // Speichern auslösen
+                verwaltung.aenderungenSpeichern();
+                JOptionPane.showMessageDialog(this, "Änderungen gespeichert!");
+
             } else {
-                int zuladung = Integer.parseInt(txtZuladung.getText());
-                neuesFahrzeug = new Transporter(marke, modell, hubraum, treibstoff, km, ps, LocalDate.now(), farbe, gewicht, preis, zuladung);
+                // --- NEU ANLEGEN ---
+                Fahrzeug neuesFahrzeug;
+                if (typ.equals("Auto")) {
+                    String aufbau = txtAufbau.getText();
+                    boolean hatNavi = chkNavi.isSelected();
+                    neuesFahrzeug = new Auto(marke, modell, hubraum, treibstoff, km, ps, LocalDate.now(), farbe, gewicht, preis, aufbau, hatNavi);
+                } else {
+                    int zuladung = Integer.parseInt(txtZuladung.getText());
+                    neuesFahrzeug = new Transporter(marke, modell, hubraum, treibstoff, km, ps, LocalDate.now(), farbe, gewicht, preis, zuladung);
+                }
+                verwaltung.fahrzeugHinzufuegen(neuesFahrzeug);
+                JOptionPane.showMessageDialog(this, "Neues Fahrzeug gespeichert!");
             }
 
-            verwaltung.fahrzeugHinzufuegen(neuesFahrzeug);
+            felderLeeren();
             listeAnzeigen();
-            JOptionPane.showMessageDialog(this, "Gespeichert!");
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Bitte Zahlen korrekt eingeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());
         }
+    }
+
+    // --- NEU: Laden der Daten in die Felder ---
+    private void fahrzeugLaden(Fahrzeug f) {
+        aktuellBearbeitetesFahrzeug = f; // Merken
+
+        txtMarke.setText(f.getMarke());
+        txtModell.setText(f.getModell());
+        txtPS.setText(String.valueOf(f.getPs()));
+        txtHubraum.setText(String.valueOf(f.getHubraum()));
+        cmbTreibstoff.setSelectedItem(f.getTreibstoff());
+        txtKm.setText(String.valueOf(f.getKmStand()));
+        txtFarbe.setText(f.getAussenfarbe());
+        txtGewicht.setText(String.valueOf((int)f.getLeergewicht()));
+        txtPreis.setText(String.valueOf(f.getPreis()));
+
+        // Unterscheidung Auto vs Transporter
+        if (f instanceof Auto) {
+            Auto a = (Auto) f;
+            cmbTyp.setSelectedItem("Auto");
+            txtAufbau.setText(a.getAufbau());
+            chkNavi.setSelected(a.isHatNavi());
+            // Transporter-Feld leeren/deaktivieren könnte man hier auch
+            txtZuladung.setText("0");
+        } else if (f instanceof Transporter) {
+            Transporter t = (Transporter) f;
+            cmbTyp.setSelectedItem("Transporter");
+            txtZuladung.setText(String.valueOf(t.getMaxZuladung()));
+            // Auto-Felder leeren
+            txtAufbau.setText("-");
+            chkNavi.setSelected(false);
+        }
+
+        btnSpeichern.setText("Änderungen speichern");
+        btnSpeichern.setForeground(Color.BLUE);
+    }
+
+    // --- NEU: Reset ---
+    private void felderLeeren() {
+        txtMarke.setText("");
+        txtModell.setText("");
+        txtPS.setText("");
+        txtHubraum.setText("");
+        txtKm.setText("");
+        txtFarbe.setText("");
+        txtGewicht.setText("");
+        txtPreis.setText("");
+        txtAufbau.setText("Kombi");
+        chkNavi.setSelected(false);
+        txtZuladung.setText("0");
+
+        aktuellBearbeitetesFahrzeug = null;
+        btnSpeichern.setText("Speichern");
+        btnSpeichern.setForeground(Color.BLACK);
+        anzeigeListe.clearSelection();
     }
 
     private void eintragLoeschen() {
         Fahrzeug gewaehltes = anzeigeListe.getSelectedValue();
         if (gewaehltes != null) {
+            if (gewaehltes == aktuellBearbeitetesFahrzeug) {
+                felderLeeren();
+            }
             verwaltung.fahrzeugLoeschen(gewaehltes);
             listeAnzeigen();
         }

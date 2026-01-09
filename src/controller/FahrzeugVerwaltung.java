@@ -13,7 +13,6 @@ public class FahrzeugVerwaltung {
 
     public FahrzeugVerwaltung() {
         this.speicherService = new JsonSpeicherservice();
-
         this.fahrzeugListe = speicherService.ladeFahrzeuge();
     }
 
@@ -39,5 +38,10 @@ public class FahrzeugVerwaltung {
             }
         }
         return ergebnis;
+    }
+
+    // --- NEU: Diese Methode hat gefehlt ---
+    public void aenderungenSpeichern() {
+        speicherService.speichereFahrzeuge(fahrzeugListe);
     }
 }
