@@ -21,30 +21,30 @@ public class VerwaltungTest {
         Auto meinTestAuto = new Auto(
                 "JUnitMarke",
                 "TestModell",
-                2000,           // Hubraum
-                "Benzin",       // Treibstoff (als String, wie in deinem Code!)
-                10000,          // kmStand
-                150,            // PS
+                2000,
+                "Benzin",
+                10000,
+                150,
                 LocalDate.now(),
                 "Schwarz",
-                1400,           // Leergewicht
+                1400,
                 29999.99,
                 "Kombi",
                 true
         );
 
-        // 3. Hinzufügen
+
         verwaltung.fahrzeugHinzufuegen(meinTestAuto);
 
-        // Check: Ist die Liste größer geworden?
+
         Assertions.assertEquals(anzahlVorher + 1, verwaltung.getAlleFahrzeuge().size(), "Ein Fahrzeug sollte hinzugefügt worden sein.");
 
-        // 4. Suchen (Test deiner Methode sucheNachMarke)
+
         List<Fahrzeug> suchErgebnis = verwaltung.sucheNachMarke("JUnitMarke");
         Assertions.assertFalse(suchErgebnis.isEmpty(), "Das Auto sollte über die Marke gefunden werden.");
         Assertions.assertEquals("TestModell", suchErgebnis.get(0).getModell());
 
-        // 5. Löschen & Aufräumen
+
         verwaltung.fahrzeugLoeschen(meinTestAuto);
         Assertions.assertEquals(anzahlVorher, verwaltung.getAlleFahrzeuge().size(), "Nach dem Löschen sollte die Anzahl wieder gleich sein.");
 
@@ -58,7 +58,6 @@ public class VerwaltungTest {
         KundenVerwaltung verwaltung = new KundenVerwaltung();
         int anzahlVorher = verwaltung.getAlleKunden().size();
 
-        // Wir nutzen den Konstruktor, den du in der GUI verwendet hast
         Kunde testKunde = new Kunde(
                 "Max",
                 "UnitTester",
@@ -70,15 +69,12 @@ public class VerwaltungTest {
                 LocalDate.of(2000, 1, 1)
         );
 
-        // Hinzufügen
         verwaltung.kundeHinzufuegen(testKunde);
 
-        // Suchen
         List<Kunde> ergebnis = verwaltung.sucheKunde("UnitTester");
         Assertions.assertEquals(1, ergebnis.size(), "Genau ein Kunde sollte gefunden werden.");
         Assertions.assertEquals("Max", ergebnis.get(0).getVorname());
 
-        // Löschen
         verwaltung.kundeLoeschen(testKunde);
         Assertions.assertEquals(anzahlVorher, verwaltung.getAlleKunden().size());
 
@@ -89,15 +85,12 @@ public class VerwaltungTest {
     public void testPersistenz() {
         System.out.println("--- Start: Test Speichern & Laden (JSON) ---");
 
-        // 1. Instanz A: Speichert etwas
         FahrzeugVerwaltung v1 = new FahrzeugVerwaltung();
         Auto saveAuto = new Auto("SaveMarke", "SaveModell", 1000, "Diesel", 500, 100, LocalDate.now(), "Weiss", 1000, 5000, "Limousine", false);
         v1.fahrzeugHinzufuegen(saveAuto);
 
-        // 2. Instanz B: Lädt neu (simuliert Programm-Neustart)
         FahrzeugVerwaltung v2 = new FahrzeugVerwaltung();
 
-        // Wir suchen das Auto in der neu geladenen Liste
         Fahrzeug geladenesAuto = v2.getAlleFahrzeuge().stream()
                 .filter(f -> f.getMarke().equals("SaveMarke") && f.getModell().equals("SaveModell"))
                 .findFirst()
@@ -105,7 +98,6 @@ public class VerwaltungTest {
 
         Assertions.assertNotNull(geladenesAuto, "Das gespeicherte Auto muss nach dem Neuladen vorhanden sein.");
 
-        // Aufräumen (wir löschen es wieder aus der Datei)
         v2.fahrzeugLoeschen(geladenesAuto);
 
         System.out.println("--- Ende: Persistenz Test erfolgreich ---");

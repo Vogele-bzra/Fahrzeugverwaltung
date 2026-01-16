@@ -18,9 +18,7 @@ public class Transporter extends Fahrzeug {
         this.maxZuladung = maxZuladung;
     }
 
-    // Getter
     public int getMaxZuladung() { return maxZuladung; }
 
-    // --- SETTER (NEU) ---
     public void setMaxZuladung(int maxZuladung) { this.maxZuladung = maxZuladung; }
 }

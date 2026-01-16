@@ -24,11 +24,8 @@ public class FahrzeugPanel extends JPanel {
     private JList<Fahrzeug> anzeigeListe;
     private DefaultListModel<Fahrzeug> listModel;
 
-    // --- NEU: Variablen für Bearbeitung ---
     private Fahrzeug aktuellBearbeitetesFahrzeug = null;
-    private JButton btnSpeichern; // Oben definiert
-    // --------------------------------------
-
+    private JButton btnSpeichern;
     public FahrzeugPanel() {
         verwaltung = new FahrzeugVerwaltung();
         setLayout(new BorderLayout(10, 10));
@@ -93,10 +90,9 @@ public class FahrzeugPanel extends JPanel {
         txtZuladung = new JTextField("0");
         formPanel.add(txtZuladung);
 
-        // --- BUTTONS ---
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
-        btnSpeichern = new JButton("Speichern"); // Initialisieren
+        btnSpeichern = new JButton("Speichern");
 
         JButton btnLoeschen = new JButton("Löschen");
         btnLoeschen.setForeground(Color.RED);
@@ -115,13 +111,11 @@ public class FahrzeugPanel extends JPanel {
         buttonPanel.add(Box.createHorizontalStrut(15));
         buttonPanel.add(btnLoeschen);
 
-        // --- LISTE ---
         listModel = new DefaultListModel<>();
         anzeigeListe = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(anzeigeListe);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Fahrzeugbestand"));
 
-        // --- NEU: Listener für Editieren ---
         anzeigeListe.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 Fahrzeug f = anzeigeListe.getSelectedValue();
@@ -131,8 +125,6 @@ public class FahrzeugPanel extends JPanel {
             }
         });
 
-        // --- LAYOUT FIX ---
-        // Formular und Buttons kommen nach OBEN, Liste in die MITTE
         JPanel topContainer = new JPanel(new BorderLayout());
         topContainer.add(formPanel, BorderLayout.CENTER);
         topContainer.add(buttonPanel, BorderLayout.SOUTH);
@@ -140,11 +132,9 @@ public class FahrzeugPanel extends JPanel {
         add(topContainer, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- EVENTS ---
         btnSpeichern.addActionListener(e -> speichern());
         btnSuchen.addActionListener(e -> suchErgebnisseAnzeigen());
 
-        // Reset Button leert jetzt auch die Felder
         btnAlle.addActionListener(e -> {
             txtSuche.setText("");
             felderLeeren();
@@ -156,10 +146,8 @@ public class FahrzeugPanel extends JPanel {
         listeAnzeigen();
     }
 
-    // --- NEU: Logik für Neu vs. Update ---
     private void speichern() {
         try {
-            // Basisdaten lesen
             String typ = (String) cmbTyp.getSelectedItem();
             String marke = txtMarke.getText();
             String modell = txtModell.getText();
@@ -172,10 +160,7 @@ public class FahrzeugPanel extends JPanel {
             int gewicht = Integer.parseInt(txtGewicht.getText());
             double preis = Double.parseDouble(txtPreis.getText());
 
-            // ENTSCHEIDUNG: Update oder Neu?
             if (aktuellBearbeitetesFahrzeug != null) {
-                // --- UPDATE ---
-                // Wir nutzen Setter auf dem existierenden Objekt
                 aktuellBearbeitetesFahrzeug.setMarke(marke);
                 aktuellBearbeitetesFahrzeug.setModell(modell);
                 aktuellBearbeitetesFahrzeug.setPs(ps);
@@ -186,7 +171,6 @@ public class FahrzeugPanel extends JPanel {
                 aktuellBearbeitetesFahrzeug.setLeergewicht((double)gewicht);
                 aktuellBearbeitetesFahrzeug.setPreis(preis);
 
-                // Spezifische Daten updaten
                 if (aktuellBearbeitetesFahrzeug instanceof Auto) {
                     ((Auto) aktuellBearbeitetesFahrzeug).setAufbau(txtAufbau.getText());
                     ((Auto) aktuellBearbeitetesFahrzeug).setHatNavi(chkNavi.isSelected());
@@ -194,12 +178,10 @@ public class FahrzeugPanel extends JPanel {
                     ((Transporter) aktuellBearbeitetesFahrzeug).setMaxZuladung(Integer.parseInt(txtZuladung.getText()));
                 }
 
-                // Speichern auslösen
                 verwaltung.aenderungenSpeichern();
                 JOptionPane.showMessageDialog(this, "Änderungen gespeichert!");
 
             } else {
-                // --- NEU ANLEGEN ---
                 Fahrzeug neuesFahrzeug;
                 if (typ.equals("Auto")) {
                     String aufbau = txtAufbau.getText();
@@ -223,9 +205,8 @@ public class FahrzeugPanel extends JPanel {
         }
     }
 
-    // --- NEU: Laden der Daten in die Felder ---
     private void fahrzeugLaden(Fahrzeug f) {
-        aktuellBearbeitetesFahrzeug = f; // Merken
+        aktuellBearbeitetesFahrzeug = f;
 
         txtMarke.setText(f.getMarke());
         txtModell.setText(f.getModell());
@@ -237,19 +218,16 @@ public class FahrzeugPanel extends JPanel {
         txtGewicht.setText(String.valueOf((int)f.getLeergewicht()));
         txtPreis.setText(String.valueOf(f.getPreis()));
 
-        // Unterscheidung Auto vs Transporter
         if (f instanceof Auto) {
             Auto a = (Auto) f;
             cmbTyp.setSelectedItem("Auto");
             txtAufbau.setText(a.getAufbau());
             chkNavi.setSelected(a.isHatNavi());
-            // Transporter-Feld leeren/deaktivieren könnte man hier auch
             txtZuladung.setText("0");
         } else if (f instanceof Transporter) {
             Transporter t = (Transporter) f;
             cmbTyp.setSelectedItem("Transporter");
             txtZuladung.setText(String.valueOf(t.getMaxZuladung()));
-            // Auto-Felder leeren
             txtAufbau.setText("-");
             chkNavi.setSelected(false);
         }
@@ -258,7 +236,6 @@ public class FahrzeugPanel extends JPanel {
         btnSpeichern.setForeground(Color.BLUE);
     }
 
-    // --- NEU: Reset ---
     private void felderLeeren() {
         txtMarke.setText("");
         txtModell.setText("");

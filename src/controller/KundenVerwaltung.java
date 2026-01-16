@@ -13,7 +13,6 @@ public class KundenVerwaltung {
 
     public KundenVerwaltung() {
         this.speicherService = new JsonSpeicherservice();
-        // Lade vorhandene Kunden beim Start
         this.kundenListe = speicherService.ladeKunden();
     }
 
@@ -36,7 +35,6 @@ public class KundenVerwaltung {
         String gesucht = suchText.toLowerCase();
 
         for (Kunde k : kundenListe) {
-            // Suche nach Nachname (case-insensitive)
             if (k.getNachname().toLowerCase().contains(gesucht)) {
                 treffer.add(k);
             }
@@ -44,10 +42,7 @@ public class KundenVerwaltung {
         return treffer;
     }
 
-    // --- HIER IST DIE NEUE METHODE ---
     public void aenderungenSpeichern() {
-        // Speichert die aktuelle Liste (mit den Änderungen) in die JSON-Datei
         speicherService.speichereKunden(kundenListe);
     }
-    // ---------------------------------
 }

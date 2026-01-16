@@ -20,11 +20,9 @@ public class Auto extends Fahrzeug {
         this.hatNavi = hatNavi;
     }
 
-    // Getter
     public String getAufbau() { return aufbau; }
     public boolean isHatNavi() { return hatNavi; }
 
-    // --- SETTER (NEU) ---
     public void setAufbau(String aufbau) { this.aufbau = aufbau; }
     public void setHatNavi(boolean hatNavi) { this.hatNavi = hatNavi; }
 }

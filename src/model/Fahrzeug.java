@@ -9,7 +9,7 @@ public abstract class Fahrzeug {
     private String treibstoff;
     private int kmStand;
     private int ps;
-    private String erstzulassung; // Als String gespeichert
+    private String erstzulassung;
     private String aussenfarbe;
     private double leergewicht;
     private double preis;
@@ -30,7 +30,6 @@ public abstract class Fahrzeug {
         this.preis = preis;
     }
 
-    // --- GETTER ---
     public String getMarke() { return marke; }
     public String getModell() { return modell; }
     public int getHubraum() { return hubraum; }
@@ -42,7 +41,6 @@ public abstract class Fahrzeug {
     public double getLeergewicht() { return leergewicht; }
     public double getPreis() { return preis; }
 
-    // --- SETTER (DIE HABEN GEFEHLT!) ---
     public void setMarke(String marke) { this.marke = marke; }
     public void setModell(String modell) { this.modell = modell; }
     public void setHubraum(int hubraum) { this.hubraum = hubraum; }

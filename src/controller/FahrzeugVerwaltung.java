@@ -40,7 +40,6 @@ public class FahrzeugVerwaltung {
         return ergebnis;
     }
 
-    // --- NEU: Diese Methode hat gefehlt ---
     public void aenderungenSpeichern() {
         speicherService.speichereFahrzeuge(fahrzeugListe);
     }

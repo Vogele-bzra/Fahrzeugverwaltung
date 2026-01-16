@@ -19,16 +19,13 @@ public class KundenPanel extends JPanel {
     private JList<Kunde> kundenListe;
     private DefaultListModel<Kunde> listModel;
 
-    // --- NEU: Variablen für das Editieren ---
-    private Kunde aktuellBearbeiteterKunde = null; // Merkt sich, wen wir bearbeiten
-    private JButton btnSpeichern;                  // Button ist jetzt hier oben definiert
-    // ----------------------------------------
+    private Kunde aktuellBearbeiteterKunde = null;
+    private JButton btnSpeichern;
 
     public KundenPanel() {
         this.verwaltung = new KundenVerwaltung();
         setLayout(new BorderLayout(10, 10));
 
-        // --- FORMULAR ---
         JPanel formPanel = new JPanel(new GridLayout(0, 2, 5, 5));
         formPanel.setBorder(BorderFactory.createTitledBorder("Kunden erfassen / bearbeiten"));
 
@@ -64,10 +61,8 @@ public class KundenPanel extends JPanel {
         txtGeburtsdatum = new JTextField("2000-01-01");
         formPanel.add(txtGeburtsdatum);
 
-        // --- BUTTONS ---
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
-        // HIER GEÄNDERT: Variable wurde oben schon deklariert
         btnSpeichern = new JButton("Speichern");
 
         JLabel lblSuche = new JLabel("Suche (Nachname):");
@@ -87,35 +82,28 @@ public class KundenPanel extends JPanel {
         buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(btnLoeschen);
 
-        // --- LISTE ---
         listModel = new DefaultListModel<>();
         kundenListe = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(kundenListe);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Kundenliste"));
 
-        // --- NEU: Listener für Klick auf die Liste (Editieren starten) ---
         kundenListe.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 Kunde k = kundenListe.getSelectedValue();
                 if (k != null) {
-                    kundenLaden(k); // Methode ganz unten
+                    kundenLaden(k);
                 }
             }
         });
 
-        // --- LAYOUT FIX (damit die Liste sichtbar ist) ---
-        // Wir packen Formular und Buttons zusammen nach OBEN (North)
         JPanel obenContainer = new JPanel(new BorderLayout());
         obenContainer.add(formPanel, BorderLayout.CENTER);
         obenContainer.add(buttonPanel, BorderLayout.SOUTH);
 
-        add(obenContainer, BorderLayout.NORTH); // Alles Eingabe-Zeug oben
-        add(scrollPane, BorderLayout.CENTER);   // Liste bekommt den ganzen Rest-Platz!
-        // ------------------------------------------------
-
+        add(obenContainer, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
         listeAktualisieren(verwaltung.getAlleKunden());
 
-        // --- EVENT LISTENER ---
         btnSpeichern.addActionListener(e -> kundeSpeichern());
         btnLoeschen.addActionListener(e -> kundeLoeschen());
 
@@ -127,15 +115,13 @@ public class KundenPanel extends JPanel {
 
         btnReset.addActionListener(e -> {
             txtSuche.setText("");
-            felderLeeren(); // Setzt alles zurück
+            felderLeeren();
             listeAktualisieren(verwaltung.getAlleKunden());
         });
     }
 
-    // --- NEU: Die intelligente Speichern-Methode ---
     private void kundeSpeichern() {
         try {
-            // Daten auslesen
             String vorname = txtVorname.getText();
             String nachname = txtNachname.getText();
             String strasse = txtStrasse.getText();
@@ -145,14 +131,11 @@ public class KundenPanel extends JPanel {
             String email = txtEmail.getText();
             LocalDate geburt = LocalDate.parse(txtGeburtsdatum.getText());
 
-            // ENTSCHEIDUNG: Neu oder Update?
             if (aktuellBearbeiteterKunde == null) {
-                // FALL A: Neu anlegen
                 Kunde k = new Kunde(vorname, nachname, strasse, plz, ort, telefon, email, geburt);
                 verwaltung.kundeHinzufuegen(k);
                 JOptionPane.showMessageDialog(this, "Neuer Kunde gespeichert!");
             } else {
-                // FALL B: Existierenden Kunden bearbeiten (Setter)
                 aktuellBearbeiteterKunde.setVorname(vorname);
                 aktuellBearbeiteterKunde.setNachname(nachname);
                 aktuellBearbeiteterKunde.setStrasse(strasse);
@@ -162,12 +145,11 @@ public class KundenPanel extends JPanel {
                 aktuellBearbeiteterKunde.setEmail(email);
                 aktuellBearbeiteterKunde.setGeburtsdatum(geburt);
 
-                // Speichern in Datei auslösen
                 verwaltung.aenderungenSpeichern();
                 JOptionPane.showMessageDialog(this, "Änderungen gespeichert!");
             }
 
-            felderLeeren(); // Formular leeren & Modus zurücksetzen
+            felderLeeren();
             listeAktualisieren(verwaltung.getAlleKunden());
 
         } catch (DateTimeParseException ex) {
@@ -177,7 +159,6 @@ public class KundenPanel extends JPanel {
         }
     }
 
-    // --- NEU: Hilfsmethode zum Laden eines Kunden in die Textfelder ---
     private void kundenLaden(Kunde k) {
         aktuellBearbeiteterKunde = k; // Merken!
 
@@ -190,12 +171,10 @@ public class KundenPanel extends JPanel {
         txtEmail.setText(k.getEmail());
         txtGeburtsdatum.setText(k.getGeburtsdatum().toString());
 
-        // Optik ändern
         btnSpeichern.setText("Änderungen speichern");
         btnSpeichern.setForeground(Color.BLUE);
     }
 
-    // --- NEU: Hilfsmethode zum Zurücksetzen ---
     private void felderLeeren() {
         txtVorname.setText("");
         txtNachname.setText("");
@@ -206,7 +185,6 @@ public class KundenPanel extends JPanel {
         txtEmail.setText("");
         txtGeburtsdatum.setText("2000-01-01");
 
-        // Modus Reset
         aktuellBearbeiteterKunde = null;
         btnSpeichern.setText("Speichern");
         btnSpeichern.setForeground(Color.BLACK);
@@ -216,7 +194,6 @@ public class KundenPanel extends JPanel {
     private void kundeLoeschen() {
         Kunde k = kundenListe.getSelectedValue();
         if (k != null) {
-            // Sicherheit: Falls wir den gerade bearbeiten, Reset machen
             if (k == aktuellBearbeiteterKunde) {
                 felderLeeren();
             }

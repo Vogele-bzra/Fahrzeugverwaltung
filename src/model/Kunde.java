@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class Kunde {
     private String vorname;
     private String nachname;
-    private String strasse; // inkl. Nummer
+    private String strasse;
     private String plz;
     private String ort;
     private String telefon;
