@@ -1,32 +1,42 @@
 # 🚗 IdealCar4You - Fahrzeug- & Kundenverwaltung
 
-Eine Java-Desktop-Anwendung zur Verwaltung eines Fahrzeugbestands (Autos & Transporter) und eines Kundenstamms. Das Projekt wurde im Rahmen des Moduls "OO Entwerfen und Implementieren" erstellt.
+Eine Java-Desktop-Anwendung zur Verwaltung eines Fahrzeugbestands (Autos & Transporter) und eines Kundenstamms. Das Projekt wurde im Rahmen des Moduls "OO Entwerfen und Implementieren" realisiert.
 
 ## 📋 Projektbeschreibung
 
-Dieses System ermöglicht Autohäusern die digitale Erfassung und Verwaltung ihres Bestands. Es basiert auf der **MVC-Architektur** (Model-View-Controller) und speichert Daten persistent in JSON-Dateien. 
+Dieses System ermöglicht Autohäusern die digitale Erfassung, Verwaltung und Persistierung ihres Bestands. Die Anwendung basiert auf der strikten **MVC-Architektur** (Model-View-Controller), um Logik und Benutzeroberfläche sauber zu trennen.
 
 ### ✨ Hauptfunktionen
 
 * **Fahrzeugverwaltung (CRUD):**
-    * Erfassen von **Autos** (inkl. Ausstattungsmerkmale wie Navi, Aufbau).
+    * Erfassen von **Autos** (inkl. spezifischer Attribute wie Navi, Aufbauform).
     * Erfassen von **Transportern** (inkl. max. Zuladung).
     * Bearbeiten und Löschen von bestehenden Fahrzeugen.
-    * Automatische Unterscheidung der Fahrzeugtypen in der GUI.
+    * Dynamische GUI: Unterscheidung der Eingabefelder je nach Fahrzeugtyp.
 * **Kundenverwaltung:**
-    * Anlegen, Bearbeiten und Löschen von Kundendaten.
-    * Suchfunktion für Kunden und Fahrzeuge.
+    * Umfassende Pflege von Kundendaten (CRUD).
+    * Integrierte Suchfunktion (Filterung nach Attributen).
 * **Datenpersistenz:**
-    * Alle Daten werden automatisch in `fahrzeuge.json` und `kunden.json` gespeichert.
-    * Daten bleiben nach Programmneustart erhalten.
-* **Qualitätssicherung:**
-    * Eingabevalidierung (z.B. Buchstaben im Preisfeld werden abgefangen).
-    * Automatisierte Unit-Tests mit JUnit 5.
+    * Automatische Speicherung aller Datensätze in JSON-Dateien (`fahrzeuge.json`, `kunden.json`).
+    * Wiederherstellung des Zustands nach Programmneustart.
+* **Sicherheit & Qualität:**
+    * **Login-System** zum Schutz vor unbefugtem Zugriff.
+    * Eingabevalidierung (z. B. Typensicherheit bei Preisen und Zahlen).
+    * Unit-Tests mit JUnit 5 zur Absicherung der Geschäftslogik.
+
+## 🔐 Login / Zugangsdaten
+
+Beim Start der Anwendung wird ein Login-Fenster angezeigt. Nutzen Sie folgende Standard-Daten für den Zugriff:
+
+| Rolle | Benutzername | Passwort |
+| :--- | :--- | :--- |
+| **Administrator** | `admin` | `1234` |
 
 ## 🛠️ Technologie-Stack
 
 * **Sprache:** Java 21
-* **GUI Framework:** Java Swing (JPanel, JFrame, LayoutManagers)
+* **GUI Framework:** Java Swing (JFrame, JPanel, EventHandling)
+* **Architektur:** MVC (Model-View-Controller)
 * **Datenhaltung:** JSON (via Jackson Library `com.fasterxml.jackson`)
 * **Testing:** JUnit 5 (Jupiter)
 * **IDE:** IntelliJ IDEA
@@ -40,22 +50,23 @@ Dieses System ermöglicht Autohäusern die digitale Erfassung und Verwaltung ihr
 2.  **In IntelliJ öffnen:**
     Öffne den Ordner als Projekt in IntelliJ IDEA.
 3.  **Abhängigkeiten (Dependencies):**
-    Stelle sicher, dass folgende Bibliotheken im Classpath sind:
+    Stelle sicher, dass folgende Bibliotheken (JARs) im Classpath eingebunden sind:
     * `jackson-databind`
     * `jackson-core`
     * `jackson-annotations`
-    * `junit-jupiter` (für Tests)
+    * `junit-jupiter` (nur für Tests erforderlich)
 4.  **Starten:**
-    Führe die Klasse `src/view/App.java` (oder `MainGUI.java`) aus.
+    Führe die Klasse `src/view/App.java` aus.
+    *(Hinweis: Starten Sie nicht direkt die MainGUI, sondern immer über App.java, damit der Login-Prozess initialisiert wird.)*
 
-## 📂 Projektstruktur (MVC)
+## 📂 Projektstruktur
 
-Das Projekt ist sauber in Schichten unterteilt:
+Das Projekt ist modular nach dem MVC-Pattern aufgebaut:
 
 ```text
 src/
-├── controller/       # Steuert die Logik (FahrzeugVerwaltung, KundenVerwaltung)
-├── model/            # Datenklassen (Auto, Transporter, Kunde, Fahrzeug)
-├── view/             # Benutzeroberfläche (MainGUI, FahrzeugPanel, KundenPanel)
-├── Service/          # Datenzugriff (JsonSpeicherservice)
-└── test/             # Unit Tests (VerwaltungTest)
+├── controller/       # Steuerungslogik (Verbindet View und Model)
+├── model/            # Datenklassen (Auto, Transporter, Kunde)
+├── view/             # Benutzeroberfläche (LoginGUI, MainGUI, Panels)
+├── service/          # Datenzugriffsschicht (JsonSpeicherservice)
+└── test/             # Unit Tests (JUnit)
