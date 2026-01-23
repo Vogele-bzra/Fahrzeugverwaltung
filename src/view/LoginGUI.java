@@ -1,5 +1,7 @@
 package view;
 
+import Service.UserSpeicherService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -10,34 +12,52 @@ public class LoginGUI extends JFrame {
     private JTextField txtUser;
     private JPasswordField txtPass;
     private JButton btnLogin;
+    private JButton btnRegister;
+
+    private UserSpeicherService userService;
 
     public LoginGUI() {
+        userService = new UserSpeicherService();
+
         setTitle("Login - IdealCar4You");
-        setSize(350, 200);
+        setSize(400, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
 
-        JPanel panelCenter = new JPanel(new GridLayout(2, 2, 10, 10));
-        panelCenter.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JLabel lblHeader = new JLabel("Willkommen", SwingConstants.CENTER);
+        lblHeader.setFont(new Font("SansSerif", Font.BOLD, 20));
+        lblHeader.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        add(lblHeader, BorderLayout.NORTH);
 
-        panelCenter.add(new JLabel("Benutzername:"));
+        JPanel formPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+        formPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(10, 10, 0, 10),
+                BorderFactory.createTitledBorder("Anmeldedaten")
+        ));
+
+        formPanel.add(new JLabel("Benutzername:"));
         txtUser = new JTextField();
-        panelCenter.add(txtUser);
+        formPanel.add(txtUser);
 
-        panelCenter.add(new JLabel("Passwort:"));
+        formPanel.add(new JLabel("Passwort:"));
         txtPass = new JPasswordField();
-        panelCenter.add(txtPass);
+        formPanel.add(txtPass);
 
-        JPanel panelSouth = new JPanel(new FlowLayout());
+        add(formPanel, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout());
         btnLogin = new JButton("Einloggen");
-        panelSouth.add(btnLogin);
+        btnRegister = new JButton("Registrieren");
 
-        add(panelCenter, BorderLayout.CENTER);
-        add(panelSouth, BorderLayout.SOUTH);
+        buttonPanel.add(btnLogin);
+        buttonPanel.add(btnRegister);
+
+        add(buttonPanel, BorderLayout.SOUTH);
 
         btnLogin.addActionListener(e -> checkLogin());
+        btnRegister.addActionListener(e -> registerUser());
 
         txtPass.addKeyListener(new KeyAdapter() {
             @Override
@@ -55,19 +75,32 @@ public class LoginGUI extends JFrame {
         String user = txtUser.getText();
         String pass = new String(txtPass.getPassword());
 
-        if (user.equals("admin") && pass.equals("1234")) {
+        if (userService.checkCredentials(user, pass)) {
             dispose();
             SwingUtilities.invokeLater(() -> {
                 try {
                     new MainGUI();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Fehler beim Starten: " + ex.getMessage() + "\nDetails siehe Konsole.");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Fehler: " + e.getMessage());
                 }
             });
         } else {
             JOptionPane.showMessageDialog(this, "Falsche Zugangsdaten!", "Login Fehler", JOptionPane.ERROR_MESSAGE);
             txtPass.setText("");
         }
+    }
+
+    private void registerUser() {
+        String user = txtUser.getText();
+        String pass = new String(txtPass.getPassword());
+
+        if (user.isEmpty() || pass.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Bitte Name und Passwort eingeben!");
+            return;
+        }
+
+        userService.createUser(user, pass);
+        JOptionPane.showMessageDialog(this, "Benutzer '" + user + "' wurde angelegt!");
     }
 }
