@@ -6,7 +6,7 @@ public class MainGUI extends JFrame {
 
     public MainGUI() {
         setTitle("IdealCar4You - Fahrzeug & Kundenverwaltung");
-        setSize(600, 800);
+        setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -16,5 +16,7 @@ public class MainGUI extends JFrame {
         tabbedPane.addTab("Kundenverwaltung", new KundenPanel());
 
         add(tabbedPane);
+
+        setVisible(true);
     }
 }
