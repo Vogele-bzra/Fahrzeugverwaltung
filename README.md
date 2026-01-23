@@ -2,11 +2,6 @@
 
 Eine Java-Desktop-Anwendung zur Verwaltung eines Fahrzeugbestands (Autos & Transporter) und eines Kundenstamms. Das Projekt wurde im Rahmen des Moduls "OO Entwerfen und Implementieren" realisiert.
 
-![Java](https://img.shields.io/badge/Java-JDK21-orange)
-![GUI](https://img.shields.io/badge/GUI-Swing-blue)
-![Testing](https://img.shields.io/badge/Tests-JUnit5-green)
-![Data](https://img.shields.io/badge/Data-JSON%20(Jackson)-lightgrey)
-
 ## 📋 Projektbeschreibung
 
 Dieses System ermöglicht Autohäusern die digitale Erfassung, Verwaltung und Persistierung ihres Bestands. Die Anwendung basiert auf der strikten **MVC-Architektur** (Model-View-Controller), um Logik und Benutzeroberfläche sauber zu trennen.
