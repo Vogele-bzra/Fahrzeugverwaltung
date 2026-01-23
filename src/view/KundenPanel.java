@@ -61,26 +61,28 @@ public class KundenPanel extends JPanel {
         txtGeburtsdatum = new JTextField("2000-01-01");
         formPanel.add(txtGeburtsdatum);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         btnSpeichern = new JButton("Speichern");
-
-        JLabel lblSuche = new JLabel("Suche (Nachname):");
-        txtSuche = new JTextField(8);
-        JButton btnSuchen = new JButton("Go");
-        JButton btnReset = new JButton("Alle / Reset");
 
         JButton btnLoeschen = new JButton("Löschen");
         btnLoeschen.setForeground(Color.RED);
 
+        JButton btnReset = new JButton("Reset / Neu");
+
+        JLabel lblSuche = new JLabel("Suche (Nachname):");
+        txtSuche = new JTextField(10);
+        JButton btnSuchen = new JButton("Go");
+
         buttonPanel.add(btnSpeichern);
+        buttonPanel.add(Box.createHorizontalStrut(5));
+        buttonPanel.add(btnLoeschen);
+        buttonPanel.add(Box.createHorizontalStrut(20));
+        buttonPanel.add(btnReset);
         buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(lblSuche);
         buttonPanel.add(txtSuche);
         buttonPanel.add(btnSuchen);
-        buttonPanel.add(btnReset);
-        buttonPanel.add(Box.createHorizontalStrut(20));
-        buttonPanel.add(btnLoeschen);
 
         listModel = new DefaultListModel<>();
         kundenListe = new JList<>(listModel);
@@ -102,9 +104,11 @@ public class KundenPanel extends JPanel {
 
         add(obenContainer, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
+
         listeAktualisieren(verwaltung.getAlleKunden());
 
         btnSpeichern.addActionListener(e -> kundeSpeichern());
+
         btnLoeschen.addActionListener(e -> kundeLoeschen());
 
         btnSuchen.addActionListener(e -> {
@@ -160,7 +164,7 @@ public class KundenPanel extends JPanel {
     }
 
     private void kundenLaden(Kunde k) {
-        aktuellBearbeiteterKunde = k; // Merken!
+        aktuellBearbeiteterKunde = k;
 
         txtVorname.setText(k.getVorname());
         txtNachname.setText(k.getNachname());
@@ -199,6 +203,7 @@ public class KundenPanel extends JPanel {
             }
             verwaltung.kundeLoeschen(k);
             listeAktualisieren(verwaltung.getAlleKunden());
+            JOptionPane.showMessageDialog(this, "Kunde gelöscht.");
         } else {
             JOptionPane.showMessageDialog(this, "Bitte erst einen Kunden auswählen.");
         }

@@ -26,6 +26,7 @@ public class FahrzeugPanel extends JPanel {
 
     private Fahrzeug aktuellBearbeitetesFahrzeug = null;
     private JButton btnSpeichern;
+
     public FahrzeugPanel() {
         verwaltung = new FahrzeugVerwaltung();
         setLayout(new BorderLayout(10, 10));
@@ -90,26 +91,28 @@ public class FahrzeugPanel extends JPanel {
         txtZuladung = new JTextField("0");
         formPanel.add(txtZuladung);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         btnSpeichern = new JButton("Speichern");
 
         JButton btnLoeschen = new JButton("Löschen");
         btnLoeschen.setForeground(Color.RED);
 
+        JButton btnAlle = new JButton("Reset / Neu");
+
         JLabel lblSuche = new JLabel("Suche:");
-        txtSuche = new JTextField(8);
+        txtSuche = new JTextField(10);
         JButton btnSuchen = new JButton("Go");
-        JButton btnAlle = new JButton("Alle / Reset");
 
         buttonPanel.add(btnSpeichern);
-        buttonPanel.add(Box.createHorizontalStrut(15));
+        buttonPanel.add(Box.createHorizontalStrut(5));
+        buttonPanel.add(btnLoeschen);
+        buttonPanel.add(Box.createHorizontalStrut(20));
+        buttonPanel.add(btnAlle);
+        buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(lblSuche);
         buttonPanel.add(txtSuche);
         buttonPanel.add(btnSuchen);
-        buttonPanel.add(btnAlle);
-        buttonPanel.add(Box.createHorizontalStrut(15));
-        buttonPanel.add(btnLoeschen);
 
         listModel = new DefaultListModel<>();
         anzeigeListe = new JList<>(listModel);
@@ -133,15 +136,15 @@ public class FahrzeugPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         btnSpeichern.addActionListener(e -> speichern());
-        btnSuchen.addActionListener(e -> suchErgebnisseAnzeigen());
 
+        btnLoeschen.addActionListener(e -> eintragLoeschen());
+
+        btnSuchen.addActionListener(e -> suchErgebnisseAnzeigen());
         btnAlle.addActionListener(e -> {
             txtSuche.setText("");
             felderLeeren();
             listeAnzeigen();
         });
-
-        btnLoeschen.addActionListener(e -> eintragLoeschen());
 
         listeAnzeigen();
     }
@@ -177,10 +180,8 @@ public class FahrzeugPanel extends JPanel {
                 } else if (aktuellBearbeitetesFahrzeug instanceof Transporter) {
                     ((Transporter) aktuellBearbeitetesFahrzeug).setMaxZuladung(Integer.parseInt(txtZuladung.getText()));
                 }
-
                 verwaltung.aenderungenSpeichern();
                 JOptionPane.showMessageDialog(this, "Änderungen gespeichert!");
-
             } else {
                 Fahrzeug neuesFahrzeug;
                 if (typ.equals("Auto")) {
@@ -231,7 +232,6 @@ public class FahrzeugPanel extends JPanel {
             txtAufbau.setText("-");
             chkNavi.setSelected(false);
         }
-
         btnSpeichern.setText("Änderungen speichern");
         btnSpeichern.setForeground(Color.BLUE);
     }
@@ -263,6 +263,9 @@ public class FahrzeugPanel extends JPanel {
             }
             verwaltung.fahrzeugLoeschen(gewaehltes);
             listeAnzeigen();
+            JOptionPane.showMessageDialog(this, "Eintrag gelöscht.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Bitte erst ein Fahrzeug auswählen.");
         }
     }
 
